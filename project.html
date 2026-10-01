@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>IT Procurement - Flow Designer</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f6f9;
+            color: #222;
+        }
+
+        header {
+            background: #172b4d;
+            color: white;
+            padding: 20px 40px;
+        }
+
+        header h1 {
+            font-size: 25px;
+        }
+
+        header p {
+            margin-top: 5px;
+            color: #cbd5e1;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1.3fr;
+            gap: 25px;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+        }
+
+        .card h2 {
+            margin-bottom: 20px;
+            color: #172b4d;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccd3dd;
+            border-radius: 7px;
+            font-size: 15px;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 22px;
+            padding: 13px;
+            background: #1769aa;
+            color: white;
+            border: none;
+            border-radius: 7px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0d4f80;
+        }
+
+        .flow {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .step {
+            padding: 15px;
+            border-radius: 8px;
+            background: #eef2f7;
+            border-left: 5px solid #9aa6b2;
+        }
+
+        .step.active {
+            border-left-color: #1769aa;
+            background: #e8f3ff;
+        }
+
+        .step.completed {
+            border-left-color: #22a06b;
+            background: #eaf8f1;
+        }
+
+        .step h3 {
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .status {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .success {
+            display: block;
+            background: #e8f8ef;
+            color: #176b45;
+        }
+
+        .error {
+            display: block;
+            background: #ffecec;
+            color: #a12622;
+        }
+
+        .order-details {
+            margin-top: 20px;
+            display: none;
+        }
+
+        .order-details p {
+            margin: 8px 0;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            background: #dff5e9;
+            color: #176b45;
+            font-size: 13px;
+        }
+
+        @media(max-width: 800px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>IT Procurement Automation</h1>
+    <p>Streaming IT Procurement - Standard Laptop Order Automation</p>
+</header>
+
+<div class="container">
+
+    <div class="grid">
+
+        <!-- REQUEST FORM -->
+        <div class="card">
+
+            <h2>💻 Laptop Request</h2>
+
+            <label>Employee Name</label>
+            <input type="text" id="employee" placeholder="Enter employee name">
+
+            <label>Employee ID</label>
+            <input type="text" id="employeeId" placeholder="EMP001">
+
+            <label>Department</label>
+            <select id="department">
+                <option value="">Select Department</option>
+                <option>IT</option>
+                <option>HR</option>
+                <option>Finance</option>
+                <option>Marketing</option>
+                <option>Operations</option>
+            </select>
+
+            <label>Laptop Type</label>
+            <select id="laptop">
+                <option value="">Select Laptop</option>
+                <option value="Standard Laptop">Standard Laptop</option>
+                <option value="Developer Laptop">Developer Laptop</option>
+                <option value="High Performance Laptop">High Performance Laptop</option>
+            </select>
+
+            <label>Quantity</label>
+            <input type="number" id="quantity" value="1" min="1">
+
+            <button onclick="startFlow()">
+                🚀 Submit Laptop Request
+            </button>
+
+            <div id="status" class="status"></div>
+
+        </div>
+
+        <!-- FLOW DESIGNER -->
+        <div class="card">
+
+            <h2>⚙️ Flow Designer</h2>
+
+            <div class="flow">
+
+                <div class="step" id="step1">
+                    <h3>1. Request Trigger</h3>
+                    <p>New laptop request received</p>
+                </div>
+
+                <div class="step" id="step2">
+                    <h3>2. Validate Request</h3>
+                    <p>Checking employee and laptop details</p>
+                </div>
+
+                <div class="step" id="step3">
+                    <h3>3. Standard Laptop Check</h3>
+                    <p>Checking whether the requested laptop is standard</p>
+                </div>
+
+                <div class="step" id="step4">
+                    <h3>4. Automatic Approval</h3>
+                    <p>Standard laptop requests are automatically approved</p>
+                </div>
+
+                <div class="step" id="step5">
+                    <h3>5. Procurement Order</h3>
+                    <p>Creating purchase order automatically</p>
+                </div>
+
+                <div class="step" id="step6">
+                    <h3>6. Order Confirmation</h3>
+                    <p>Request completed successfully</p>
+                </div>
+
+            </div>
+
+            <div class="order-details" id="orderDetails">
+
+                <h2 style="margin-top:25px;">📦 Order Details</h2>
+
+                <p><b>Order ID:</b> <span id="orderId"></span></p>
+                <p><b>Employee:</b> <span id="resultEmployee"></span></p>
+                <p><b>Department:</b> <span id="resultDepartment"></span></p>
+                <p><b>Laptop:</b> <span id="resultLaptop"></span></p>
+                <p><b>Quantity:</b> <span id="resultQuantity"></span></p>
+                <p><b>Status:</b> <span class="badge">Approved & Ordered</span></p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function activateStep(stepNumber) {
+
+    const step = document.getElementById("step" + stepNumber);
+
+    step.classList.add("active");
+
+}
+
+function completeStep(stepNumber) {
+
+    const step = document.getElementById("step" + stepNumber);
+
+    step.classList.remove("active");
+    step.classList.add("completed");
+
+}
+
+async function startFlow() {
+
+    const employee =
+        document.getElementById("employee").value.trim();
+
+    const employeeId =
+        document.getElementById("employeeId").value.trim();
+
+    const department =
+        document.getElementById("department").value;
+
+    const laptop =
+        document.getElementById("laptop").value;
+
+    const quantity =
+        document.getElementById("quantity").value;
+
+    const status =
+        document.getElementById("status");
+
+    // Validation
+
+    if (!employee || !employeeId || !department || !laptop || !quantity) {
+
+        status.className = "status error";
+
+        status.innerHTML =
+            "❌ Please fill all required fields.";
+
+        return;
+    }
+
+    // Reset previous flow
+
+    for (let i = 1; i <= 6; i++) {
+
+        const step = document.getElementById("step" + i);
+
+        step.classList.remove("active");
+        step.classList.remove("completed");
+
+    }
+
+    document.getElementById("orderDetails").style.display = "none";
+
+    status.className = "status";
+
+    status.innerHTML = "";
+
+    // STEP 1
+
+    activateStep(1);
+
+    await delay(800);
+
+    completeStep(1);
+
+    // STEP 2
+
+    activateStep(2);
+
+    await delay(900);
+
+    completeStep(2);
+
+    // STEP 3
+
+    activateStep(3);
+
+    await delay(1000);
+
+    // Standard laptop condition
+
+    if (laptop !== "Standard Laptop") {
+
+        document.getElementById("step3")
+            .classList.remove("active");
+
+        status.className = "status error";
+
+        status.innerHTML =
+            "⚠️ This automation supports only Standard Laptop orders. Manual approval is required for this request.";
+
+        return;
+    }
+
+    completeStep(3);
+
+    // STEP 4
+
+    activateStep(4);
+
+    await delay(1000);
+
+    completeStep(4);
+
+    // STEP 5
+
+    activateStep(5);
+
+    await delay(1200);
+
+    completeStep(5);
+
+    // Generate Order ID
+
+    const orderId =
+        "PO-" +
+        new Date().getFullYear() +
+        "-" +
+        Math.floor(1000 + Math.random() * 9000);
+
+    // STEP 6
+
+    activateStep(6);
+
+    await delay(1000);
+
+    completeStep(6);
+
+    // Display result
+
+    document.getElementById("orderId").innerText = orderId;
+
+    document.getElementById("resultEmployee").innerText = employee;
+
+    document.getElementById("resultDepartment").innerText = department;
+
+    document.getElementById("resultLaptop").innerText = laptop;
+
+    document.getElementById("resultQuantity").innerText = quantity;
+
+    document.getElementById("orderDetails").style.display = "block";
+
+    status.className = "status success";
+
+    status.innerHTML =
+        "✅ Laptop request successfully processed through the automated Flow Designer.";
+
+}
+
+</script>
+
+</body>
+</html>
